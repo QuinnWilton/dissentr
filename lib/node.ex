@@ -31,6 +31,8 @@ defmodule Dissentr.Node do
                                                   encrypted_key,
                                                   private_rsa_key)
 
+    IO.puts "DEBUG: Node #{:os.getpid()} decrypted #{Debug.pp(message)} to #{Debug.pp(plaintext)}"
+
     { :noreply, node_info }
   end
 
@@ -39,6 +41,8 @@ defmodule Dissentr.Node do
     plaintext       = CryptoHybrid.decrypt_hybrid(message,
                                                   encrypted_key,
                                                   private_rsa_key)
+
+    IO.puts "DEBUG: Node #{:os.getpid()} decrypted #{Debug.pp(message)} to #{Debug.pp(plaintext)}"
 
     :gen_server.cast(node_info.next, { :handle, plaintext, next_keys })
 
