@@ -1,3 +1,0 @@
-defmodule CryptoHybrid do
-
-end
