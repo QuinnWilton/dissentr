@@ -31,7 +31,7 @@ defmodule Dissentr.Node do
                                                   encrypted_key,
                                                   private_rsa_key)
 
-    IO.puts "\nDEBUG: Cluster #{node()} decrypted\n#{Debug.pp(message)}\nto\n#{Debug.pp(plaintext)}"
+    IO.puts "\nDEBUG: Decrypted\n#{Debug.pp(message)}\nto\n#{Debug.pp(plaintext)}"
 
     { :noreply, node_info }
   end
