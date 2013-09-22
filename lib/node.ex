@@ -6,7 +6,7 @@ defmodule Dissentr.Node do
                       private_keyfile: nil
 
   def start_link(name, state) do
-    :gen_server.start_link( { :local, name }, __MODULE__, state, [])
+    :gen_server.start_link( { :global, name }, __MODULE__, state, [])
   end
 
   def init({ next, public_keyfile, private_keyfile }) do
@@ -31,7 +31,7 @@ defmodule Dissentr.Node do
                                                   encrypted_key,
                                                   private_rsa_key)
 
-    IO.puts "DEBUG: Node #{:os.getpid()} decrypted #{Debug.pp(message)} to #{Debug.pp(plaintext)}"
+    IO.puts "\nDEBUG: Cluster #{node()} decrypted\n#{Debug.pp(message)}\nto\n#{Debug.pp(plaintext)}"
 
     { :noreply, node_info }
   end
@@ -41,8 +41,6 @@ defmodule Dissentr.Node do
     plaintext       = CryptoHybrid.decrypt_hybrid(message,
                                                   encrypted_key,
                                                   private_rsa_key)
-
-    IO.puts "DEBUG: Node #{:os.getpid()} decrypted #{Debug.pp(message)} to #{Debug.pp(plaintext)}"
 
     :gen_server.cast(node_info.next, { :handle, plaintext, next_keys })
 

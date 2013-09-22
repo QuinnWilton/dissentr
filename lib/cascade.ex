@@ -1,6 +1,11 @@
 defmodule Dissentr.Cascade do
   use Supervisor.Behaviour
 
+  def add_node(name, next, key_number) do
+    Dissentr.Cascade.start_link({ name, next, "example_data/pub#{key_number}.pem",
+                                              "example_data/priv#{key_number}.pem" })
+  end
+
   def start_link(state) do
     :supervisor.start_link( __MODULE__, state)
   end

@@ -10,8 +10,7 @@ defmodule Dissentr.Mixfile do
 
   # Configuration for the OTP application
   def application do
-    [ registered: [:dissentr],
-      mod: { Dissentr, {} } ]
+    [ registered: [:dissentr]]
   end
 
   # Returns the list of dependencies in the format:
