@@ -20,10 +20,10 @@ defmodule Dissentr.Cascade do
   end
 
   def mix(name, message) do
-    public_keys = :gen_server.call(name, :public_keys)
+    public_keys = :gen_server.call({ :global, name }, :public_keys)
     { cipher_text, encrypted_keys } = encrypt(public_keys, message)
 
-    :gen_server.cast(name, {:handle, cipher_text, encrypted_keys})
+    :gen_server.cast({ :global, name }, {:handle, cipher_text, encrypted_keys})
   end
 
   def encrypt([], message) do

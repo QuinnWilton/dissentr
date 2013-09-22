@@ -42,7 +42,7 @@ defmodule Dissentr.Node do
                                                   encrypted_key,
                                                   private_rsa_key)
 
-    :gen_server.cast(node_info.next, { :handle, plaintext, next_keys })
+    :gen_server.cast({ :global, node_info.next }, { :handle, plaintext, next_keys })
 
     { :noreply, node_info }
   end
