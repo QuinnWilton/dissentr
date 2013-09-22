@@ -52,6 +52,6 @@ defmodule Dissentr.Node do
   end
 
   def accumulate_public_keys(next) do
-    :gen_server.call(next, :public_keys)
+    :gen_server.call({ :global, next }, :public_keys)
   end
 end
