@@ -1,5 +1,5 @@
 defmodule Dissentr.Node do
-	use GenServer.Behaviour
+  use GenServer.Behaviour
 
   defrecord NodeInfo, next: nil,
                       public_keys: nil,
@@ -9,7 +9,7 @@ defmodule Dissentr.Node do
     :gen_server.start_link( { :local, name }, __MODULE__, state, [])
   end
 
-	def init({ next, public_keyfile, private_keyfile }) do
+  def init({ next, public_keyfile, private_keyfile }) do
     public_key = KeyParser.from_file(public_keyfile)
     public_keys = accumulate_public_keys(next) ++ [public_key]
 
@@ -17,8 +17,8 @@ defmodule Dissentr.Node do
                              public_keys: public_keys,
                              private_keyfile: private_keyfile)
 
-		{ :ok, node_info }
-	end
+    { :ok, node_info }
+  end
 
   def handle_call(:public_keys, _from, node_info) do
     { :reply, node_info.public_keys, node_info }
@@ -30,8 +30,6 @@ defmodule Dissentr.Node do
     plaintext       = CryptoHybrid.decrypt_hybrid(message,
                                                   encrypted_key,
                                                   private_rsa_key)
-
-    IO.puts "Result: #{plaintext}"
 
     { :noreply, node_info }
   end

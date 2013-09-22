@@ -8,7 +8,7 @@ Network:
 - Directed, acyclic graph, with out-degree 1
 - A 'cascade' is a path containing two terminal nodes
 - Cascades build trust, by ensuring that any path will always contain at least 1-trusted node
-	- Protects against supernode attacks: the NSA can't control the network without compromising trusted nodes
+- Protects against supernode attacks: the NSA can't control the network without compromising trusted nodes
 
 Node:
 - Maintains an RSA keypair

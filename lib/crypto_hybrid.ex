@@ -14,33 +14,33 @@ defmodule CryptoHybrid do
     plaintext
   end
 
-	def generate_aes_key(size_in_bytes) do
-		:crypto.strong_rand_bytes(size_in_bytes)
-	end
+  def generate_aes_key(size_in_bytes) do
+    :crypto.strong_rand_bytes(size_in_bytes)
+  end
 
-	def generate_aes_iv(size_in_bytes) do
-		:binary.copy(<<0>>, size_in_bytes)
-	end
+  # CFB mode is considered deterministic enough that IVs can be static.
+  # This should probably still be randomized though.
+  def generate_aes_iv(size_in_bytes) do
+    :binary.copy(<<0>>, size_in_bytes)
+  end
 
-	def encrypt_aes(message, key) do
-		iv = generate_aes_iv(16)
-    #padded_message = pad(message, 16)
-		:crypto.block_encrypt(:aes_cfb128, key, iv, message)
-	end
+  def encrypt_aes(message, key) do
+    iv = generate_aes_iv(16)
+    :crypto.block_encrypt(:aes_cfb128, key, iv, message)
+  end
 
-	def decrypt_aes(message, key) do
-		iv        = generate_aes_iv(16)
-		plaintext = :crypto.block_decrypt(:aes_cfb128, key, iv, message)
-    #unpadded  = unpad(plaintext)
-	end
+  def decrypt_aes(message, key) do
+    iv        = generate_aes_iv(16)
+    plaintext = :crypto.block_decrypt(:aes_cfb128, key, iv, message)
+  end
 
-	def encrypt_rsa(message, key) do
-		:public_key.encrypt_public(message, key)
-	end
+  def encrypt_rsa(message, key) do
+    :public_key.encrypt_public(message, key)
+  end
 
-	def decrypt_rsa(message, key) do
-		:public_key.decrypt_private(message, key)
-	end
+  def decrypt_rsa(message, key) do
+    :public_key.decrypt_private(message, key)
+  end
 
   # Using the algorithm described in [PKCS5]
   def pad(binary, padding) do
