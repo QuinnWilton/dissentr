@@ -42,7 +42,7 @@ If, after all of my warnings, you still want to see it in action, it's dead-easy
     
 This will stick you into a REPL, loaded with Dissentr's namespaces and dependencies. Sorry, there's no interface yet. From there, if you're using more than one machine, you'll want to link them all together, by running the following on every machine you want to host a node on. Since Erlang node connections are transitive, you won't have to do this for every pair of nodes.:
 
-    :net_adm.ping(binary_to_atom(hostname)
+    :net_adm.ping(binary_to_atom(hostname))
     
 The hostname in question can be found in the iex prompt. Most likely it will be something@domain.
 
