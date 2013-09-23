@@ -33,3 +33,29 @@ I again emphasize that the cryptosystem in place is the result of a rather rushe
 3. For each node in the cascade, beginning with the exit node, and continuing through to the entrance node, the client generates an AES CFB128 key, which it uses to encrypt M. The key is then encrypted using that node's public RSA key.
 4. M, now encrypted with AES CFB128 for every node in the cascade, is then passed to the entrance node along with the encrypted AES keys. The entrance node then uses its private RSA key to decrypt the AES key, so that it can subsequently decrypt M, yielding yet another cipher text.
 5. This process is repeated for every node in the cascade, until the final node decrypts M to a plaintext, which it then handles accordingly.
+
+### Building and Running it
+
+If, after all of my warnings, you still want to see it in action, it's dead-easy to get setup. All you'll need is Erlang installed (Tested on R16B02), along with [Elixir](http://elixir-lang.org/). From there, you'll want to invoke the following from within Dissentr's directory, on every machine you want to host a node:
+
+    iex --sname {Any name, different per machine} --cookie {Any string, common between all machines} -S mix
+    
+This will stick you into a REPL, loaded with Dissentr's namespaces and dependencies. Sorry, there's no interface yet. From there, if you're using more than one machine, you'll want to link them all together, by running the following on every machine you want to host a node on. Since Erlang node connections are transitive, you won't have to do this for every pair of nodes.:
+
+    :net_adm.ping(binary_to_atom(hostname)
+    
+The hostname in question can be found in the iex prompt. Most likely it will be something@domain.
+
+Now, just spawn a few nodes to create a network. I've got some temporary methods in place for making this easy, using some hardcoded keys stored in example_data/ for testing. Ideally, each node will be hosted on a different machine, but for testing purposes it doesn't matter. Within your prompt, execute the following:
+
+    Dissentr.Cascade.add_node(:node1, nil, 1)
+    Dissentr.Cascade.add_node(:node2, :node1, 2)
+    Dissentr.Cascade.add_node(:node3, :node2, 3)
+    Dissentr.Cascade.add_node(:node4, :node3, 4)
+    Dissentr.Cascade.add_node(:node5, :node4, 5)
+    
+Finally, to send an encrypted message, run the following, substituting the node and message as desired:
+
+    Dissentr.Cascade.mix(:node3, "Something, something, NSA")
+    
+If all went well, you should see a debug statement print out the plaintext method, on the machine which is hosting :node1
