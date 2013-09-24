@@ -58,4 +58,4 @@ Finally, to send an encrypted message, run the following, substituting the node 
 
     Dissentr.Cascade.mix(:node3, "Something, something, NSA")
     
-If all went well, you should see a debug statement print out the plaintext method, on the machine which is hosting :node1
+If all went well, you should see a debug statement print out the plaintext message, on the machine which is hosting :node1
