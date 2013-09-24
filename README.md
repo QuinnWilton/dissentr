@@ -1,4 +1,4 @@
-Note: This project was created as part of a 48-hour hackathon - and primarily as a proof of concept. While the ideas may be sound, and the prototype may work as designed, the protocols involved in this specific project have not been peer-reviewed, and so I cannot recommend that the network be used for anything requiring serious privacy.
+Note: This project was created as part of a 36-hour hackathon - and primarily as a proof of concept. While the ideas may be sound, and the prototype may work as designed, the protocols involved in this specific project have not been peer-reviewed, and so I cannot recommend that the network be used for anything requiring serious privacy.
 
 # Dissentr
 ## A High-Latency Overlay Mix Network
