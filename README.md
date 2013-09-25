@@ -1,4 +1,4 @@
-Note: This project was created as part of a 36-hour hackathon - and primarily as a proof of concept. While the ideas may be sound, and the prototype may work as designed, the protocols involved in this specific project have not been peer-reviewed, and so I cannot recommend that the network be used for anything requiring serious privacy.
+Note: This project was created as part of a 36-hour hackathon - and primarily as a proof of concept. While the ideas may be sound and the prototype may work as designed, the protocols involved in this specific project have not been peer-reviewed, and so I cannot recommend that the network be used for anything requiring serious privacy.
 
 # Dissentr
 ## A High-Latency Overlay Mix Network
@@ -13,22 +13,22 @@ Dissentr manages to protect against these sorts of attacks by being engineered a
 Extending and Resisting Statistical Disclosure](http://freehaven.net/doc/e2e-traffic/e2e-traffic.pdf).
 
 ### Cascades
-Much like any mix network, Dissentr models its network as a graph of nodes, each responsible for handling the relay of traffic as it moves along some path through the network. Where Dissentr differs from a network such as Tor is in how this path is constructed. In Dissentr, the network is constructed out of cascades (A term I first heard described by Ian Goldberg, but I've been unable to pin down an original source for): essentially directed, acyclic sub-graphs, in which a node defines a set of "trusted" nodes, through which they are willing to relay traffic through. Dissentr simplifies this model by only allowing for nodes of out-degree 1, at this time. This construction brings about a number of useful results:
+Much like any mix network, Dissentr models its network as a graph of nodes, each responsible for handling the relay of traffic as it moves along some path through the network. Where Dissentr differs from a network such as Tor is in how this path is constructed. In Dissentr, the network is constructed out of cascades (A term I first heard described by Ian Goldberg, but I've been unable to pin down an original source for): essentially directed, acyclic sub-graphs, in which a node defines a set of "trusted" nodes, through which they are willing to relay traffic. Dissentr simplifies this model by only allowing for nodes of out-degree 1 at this time. This construction brings about a number of useful results:
 
-1. In the event that a node is known to be compromised, individual nodes are allowed the ability to either remove themselves from a cascade, or bypass untrusted nodes entirely, without the necessity of a trusted third-party.
-2. The network is protected from "supernode invasions," in which an attacker floods the network with compromised nodes, in the hopes of either endangering the network's health, or placing the security of users passing through their nodes at risk of traffic interception, and subsequent analysis. This can be guaranteed because cascades are constructed by virtue of a measure of trust between node-operators, and so long as there exists some non-zero subset of trusted operators, they retain the ability to form a cascade of their own, effectively shutting out the efforts of such an attacker.
+1. In the event that a node is known to be compromised, individual nodes are allowed the ability to either remove themselves from a cascade, or bypass untrusted nodes entirely, without the necessity of a trusted third party.
+2. The network is protected from "supernode invasions," in which an attacker floods the network with compromised nodes, in the hopes of either endangering the network's health, or placing the security of users passing through their nodes at risk of traffic interception, and subsequent analysis. This can be guaranteed because cascades are constructed by virtue of a measure of trust between node operators, and so long as there exists some non-zero subset of trusted operators, they retain the ability to form a cascade of their own, effectively shutting out the efforts of such an attacker.
 
 ### Use-Cases
-As mentioned previously, the high-latency nature of the network causes a shift in the sorts of activities best facilitated by its use, however, there do exist some unique opportunities which I have neither seen implemented in the context of a mix network, nor discussed in the literature.
+As mentioned previously, the high-latency nature of the network causes a shift in the sorts of activities best facilitated by its use. However, there do exist some unique opportunities which I have neither seen implemented in the context of a mix network, nor discussed in the literature.
 
 A personal favourite idea revolves around creating a platform for political blogging, which, assuming a noisy enough network, would offer political dissidents the ability to freely write about issues of corruption or government abuse, without many of the risks associated with using a lower-latency network like Tor. If it takes a week for a blog post to appear in circulation after the author posts it to the network, it becomes magnitudes more difficult for any assailant to trace the authorship of that blog post - especially if that author never visited the website which hosts their content in the first place!
 
 It also becomes a fairly trivial exercise to adapt the network to act as a mixing service for digital currency such as Bitcoin. Furthermore, by breaking the network into a number of smaller, disjoint networks for that purpose, one is be able to counter many of the current attacks which target existing mixing services.
 
 ### Cryptosystem
-I again emphasize that the cryptosystem in place is the result of a rather rushed 48-hour hackathon - in a production system, I would recommend implementing a peer-reviewed cryptosystem, such as the very lightweight [Sphinx](http://www.cypherpunks.ca/~iang/pubs/Sphinx_Oakland09.pdf), or, pending their coming proof of security, the recently proposed [Ibis](https://ibis.uwaterloo.ca/). That being said, Dissentr works as follows:
+I again emphasize that the cryptosystem in place is the result of a rather rushed 36-hour hackathon - in a production system, I would recommend implementing a peer-reviewed cryptosystem, such as the very lightweight [Sphinx](http://www.cypherpunks.ca/~iang/pubs/Sphinx_Oakland09.pdf), or, pending their coming proof of security, the recently proposed [Ibis](https://ibis.uwaterloo.ca/). That being said, Dissentr works as follows:
 
-1. Every node in the network maintains an RSA-keypair, with the public key being exposed to every node in a given cascade.
+1. Every node in the network maintains an RSA keypair, with the public key being exposed to every node in a given cascade.
 2. When a client wishes to send a message M through the network, they choose some cascade C.
 3. For each node in the cascade, beginning with the exit node, and continuing through to the entrance node, the client generates an AES CFB128 key, which it uses to encrypt M. The key is then encrypted using that node's public RSA key.
 4. M, now encrypted with AES CFB128 for every node in the cascade, is then passed to the entrance node along with the encrypted AES keys. The entrance node then uses its private RSA key to decrypt the AES key, so that it can subsequently decrypt M, yielding yet another cipher text.
@@ -36,7 +36,7 @@ I again emphasize that the cryptosystem in place is the result of a rather rushe
 
 ### Building and Running it
 
-If, after all of my warnings, you still want to see it in action, it's dead-easy to get setup. All you'll need is Erlang installed (Tested on R16B02), along with [Elixir](http://elixir-lang.org/). From there, you'll want to invoke the following from within Dissentr's directory, on every machine you want to host a node:
+If, after all of my warnings, you still want to see it in action, it's dead easy to get setup. All you'll need is Erlang installed (tested on R16B02), along with [Elixir](http://elixir-lang.org/). From there, you'll want to invoke the following from within Dissentr's directory, on every machine you want to host a node:
 
     iex --sname {Any name, different per machine} --cookie {Any string, common between all machines} -S mix
     
@@ -58,4 +58,4 @@ Finally, to send an encrypted message, run the following, substituting the node 
 
     Dissentr.Cascade.mix(:node3, "Something, something, NSA")
     
-If all went well, you should see a debug statement print out the plaintext message, on the machine which is hosting :node1
+If all went well, you should see a debug statement print out the plaintext method on the machine which is hosting :node1.
